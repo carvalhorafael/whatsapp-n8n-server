@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>Whatsapp N8N Server</title>    
+  </head>
+  <body>        
+    <div id="app">
+      <img src="" alt="QR Code" id="qrcode">
+      <h3>Logs:</h3>
+      <p id="logs"></p>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>  
+      document.addEventListener("DOMContentLoaded", function(e) {
+        var socket = io();
+        var logs = document.getElementById("logs");
+        var qrcode = document.getElementById("qrcode");
+        
+        socket.on('message', function(msg) {
+          let li = document.createElement('li');
+          li.innerHTML = msg;
+          logs.appendChild(li);
+        });
+  
+        socket.on('qr', function(src) {
+          qrcode.setAttribute('src', src);
+          qrcode.style.display = 'block';
+        });
+  
+        socket.on('ready', function(data) {
+          qrcode.style.display = 'none';
+        });
+  
+        socket.on('authenticated', function(data) {
+          qrcode.style.display = 'none';
+        });
+      });
+    </script>
+    
+  </body>
+</html>
