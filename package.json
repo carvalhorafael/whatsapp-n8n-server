@@ -1,0 +1,35 @@
+{
+  "name": "whatsapp-n8n-server",
+  "version": "0.0.1",
+  "description": "A small server API to use Whatsapp Web through N8N",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "start:dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "whatsapp-api",
+    "node",
+    "n8n",
+    "whatsapp-web",
+    "api",
+    "whatsapp"
+  ],
+  "author": "Rafael Carvalho <falecomigo@rafaelcarvalho.tv> (https://rafaelcarvalho.tv)",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
+    "express-validator": "^7.0.1",
+    "http": "^0.0.1-security",
+    "mime-types": "^2.1.35",
+    "qrcode": "^1.5.3",
+    "socket.io": "^4.7.1",
+    "whatsapp-web.js": "^1.21.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
