@@ -1,5 +1,6 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const express = require('express');
+const { body, validationResult } = require('express-validator');
 const socketIO = require('socket.io');
 const qrcode = require('qrcode');
 const http = require('http');
@@ -9,6 +10,7 @@ const port = process.env.PORT || 8080;
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
+const Util = require('./util/Util');
 
 app.use(express.json());
 app.use(express.urlencoded({
@@ -76,6 +78,42 @@ io.on('connection', function(socket) {
     console.log('Client disconnected!', reason);
     client.initialize();
   });
+});
+
+// Send message
+app.post('/send-message', [
+  body('number').notEmpty(),
+  body('message').notEmpty(),
+  ], async (req, res) => {
+  const errors = validationResult(req).formatWith(({
+    msg
+  }) => {
+    return msg;
+  });
+
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      status: false,
+      message: errors.mapped()
+    });
+  }
+
+  const number = Util.formatPhoneNumber(req.body.number);
+  const message = req.body.message;
+  
+  client.sendMessage(number, message).then(response => {
+    res.status(200).json({
+      status: true,
+      message: 'Message sent successfully.',
+      response: response
+    });
+  }).catch(err => {
+      res.status(500).json({
+        status: false,
+        message: 'Message not sent.',
+        response: err.text
+      });
+    });  
 });
 
 
