@@ -18,11 +18,6 @@ app.use(express.urlencoded({
 }));
 app.use("/", express.static(__dirname + "/"))
 
-// app.get('/', (req, res) => {
-//   res.sendFile('index.html', {
-//     root: __dirname
-//   });
-// });
 
 const client = new Client({
   authStrategy: new LocalAuth({ clientId: 'client-one' }),
@@ -114,6 +109,49 @@ app.post('/send-message', [
         response: err.text
       });
     });  
+});
+
+// Get chats
+app.get('/chats', (req, res) => {
+  client.getChats().then(response => {
+    res.status(200).json({
+      status: true,
+      message: 'Returning chats',
+      response: response
+    });
+  }).catch(err => {
+      res.status(500).json({
+        status: false,
+        message: 'Cant return chats.',
+        response: err.text
+      });
+    });  
+});
+
+// Get group participants
+app.get('/group-participants', (req, res) => {
+  let groupId = req.query.groupId;
+  
+  if (groupId === "") {
+    return res.status(422).json({
+      status: false,
+      message: 'GroupID should be informed.'
+    });
+  }
+  
+  client.getChatById(groupId).then(response => {
+    res.status(200).json({
+        status: true,
+        message: 'Returning chats',
+        response: response.groupMetadata.participants
+      });
+  }).catch(err => {
+      res.status(500).json({
+        status: false,
+        message: 'Cant return chats.',
+        response: err.text
+      });
+    });      
 });
 
 
